@@ -21,10 +21,14 @@ var app = require('express')();
 var server = require('http').Server(app);
 var socket = require('socket.io')(server);
 
-app.listen(process.env.PORT || 8000);
+server.listen(process.env.PORT || 8000);
 
 app.get('/', function (req, res) {
   res.sendfile(__dirname + '/index.html');
+});
+
+app.get('/fade.js', function (req, res) {
+  res.sendfile(__dirname + '/fade.js');
 });
 
 var stream = T.stream('statuses/sample');
@@ -41,7 +45,7 @@ stream.on('tweet', function (tweet) {
 
   var baseFreq = fc - min;
 
-  var divider = (max-min)/24;
+  var divider = (max-min)/(12*6);
 
   var toneNumber = Math.round(fc/divider);
   var toneFreq = tone_freq(toneNumber);

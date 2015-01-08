@@ -26,6 +26,7 @@
 					.on("end", draw)
 					.start();
 			function draw(words) {
+				$("#cloud").html("");
 				d3.select("#cloud").append("svg")
 						.attr("width", 1000)
 						.attr("height", 1000)
@@ -52,8 +53,8 @@
 		}
 		;
 		volume = 0.5;
+		var audio = new Audio(); // Create the HTML5 audio element
 		var play = function (freq) {
-			var audio = new Audio(); // Create the HTML5 audio element
 			var wave = new RIFFWAVE();
 			var data = [];
 
@@ -61,7 +62,7 @@
 			wave.header.numChannels = 1;
 
 			var i = 0;
-			while (i < 1000) {
+			while (i < 100000) {
 				var t = i / wave.header.sampleRate;
 				data[i++] = 128 + Math.round(127 * Math.sin(freq * t * 2 * Math.PI));
 			}
@@ -69,13 +70,11 @@
 			wave.Make(data);
 			audio.src = wave.dataURI;
 			audio.volume = volume;
-			fadeIn(audio, 250, 1, 1);
-			fadeOut(audio, 250, 0, 1);
-		}
+			audio.play();
+		};
 
-		var wsUri = "ws://localhost:8000/";
-		//var wsUri = location.origin.replace(/^http/, 'ws');
-		var socket = io(wsUri);
+		var wsUri = location.origin;
+		var socket = io.connect(wsUri);
 
 		socket.on('connect', function () {
 			console.log("connection");
@@ -87,9 +86,6 @@
 			play(t.tone);
 		});
 		$(document).ready(function(){
-			$("#cloud").html("");
-			buildTagCloud([{text: "this", size: 20}, {text: "is", size: 25}, {text: "a", size: 50}, {text: "test", size: 100}, {text: "Trond", size: 100}]);
-			$("#cloud").html("");
 			buildTagCloud([{text: "this", size: 20}, {text: "is", size: 25}, {text: "a", size: 50}, {text: "test", size: 100}, {text: "Trond", size: 100}]);
 		});
 	</script>
