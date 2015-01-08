@@ -45,7 +45,7 @@ stream.on('tweet', function (tweet) {
 
   var baseFreq = fc - min;
 
-  var divider = (max-min)/24;
+  var divider = (max-min)/(12*6);
 
   var toneNumber = Math.round(fc/divider);
   var toneFreq = tone_freq(toneNumber);
