@@ -2,6 +2,10 @@ var Twit = require('twit');
 var _ = require('underscore');
 var socket = require('socket.io')(8000);
 
+var connect = require('connect');
+var serveStatic = require('serve-static');
+connect().use(serveStatic(__dirname + "/public")).listen(80);
+
 var T = new Twit({
   consumer_key: '7rMLsE4faev5mrvfJ5hYreu8w',
   consumer_secret: 'b6Qc4ED2MK03rOJxZlWMSf9VuU30KK3dLZncx5WIVrvNO7jvmT',
@@ -11,7 +15,7 @@ var T = new Twit({
 
 var stream = T.stream('statuses/sample');
 
-var last24counts = [];
+var lastCounts = [];
 
 function tone_freq(nr) {
   nr += 48;
@@ -20,13 +24,13 @@ function tone_freq(nr) {
 
 stream.on('tweet', function (tweet) {
   var fc = tweet.user.followers_count;
-  last24counts.push(fc);
+  lastCounts.push(fc);
 
-  if(last24counts.length < 5) {return;}
+  if(lastCounts.length < 10) {return;}
 
 
-  var max = _.max(last24counts);
-  var min = _.min(last24counts);
+  var max = _.max(lastCounts);
+  var min = _.min(lastCounts);
 
   var baseFreq = fc - min;
 
@@ -43,6 +47,6 @@ stream.on('tweet', function (tweet) {
     influencei: tweet.user.followers_count,
     tone: toneFreq
   });
-  last24counts.pop();
+  lastCounts.pop();
 });
 

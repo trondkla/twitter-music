@@ -28,7 +28,7 @@ data[i++] = 128 + Math.round(127 * Math.sin(freq * t * 2 * Math.PI));
    audio.play();
 }
 
-var wsUri = "ws://localhost:8000/";
+var wsUri = "ws://twitter-music.herokuapp.com:8000/";
 var socket = io(wsUri);
 
 socket.on('connect', function() {
