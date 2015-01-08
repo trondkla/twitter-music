@@ -1,0 +1,18 @@
+{
+  "author": "",
+  "name": "music",
+  "version": "0.0.0",
+  "repository": {
+    "url": ""
+  },
+  "dependencies": {
+    "twit": "*",
+    "underscore": "*",
+    "socket.io" : "*"
+  },
+  "devDependencies": {},
+  "optionalDependencies": {},
+  "engines": {
+    "node": "*"
+  }
+}
