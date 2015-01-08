@@ -1,10 +1,5 @@
 var Twit = require('twit');
 var _ = require('underscore');
-var socket = require('socket.io')(process.env.PORT || 8000);
-
-var connect = require('connect');
-var serveStatic = require('serve-static');
-connect().use(serveStatic(__dirname + "/public")).listen(process.env.PORT || 8080);
 
 var T = new Twit({
   consumer_key: '7rMLsE4faev5mrvfJ5hYreu8w',
@@ -13,7 +8,6 @@ var T = new Twit({
   access_token_secret: 'D7NHtpsoSYwr0VwKhkSAC80podGOFofrXR1k3IzG0CoDm'
 });
 
-var stream = T.stream('statuses/sample');
 
 var lastCounts = [];
 
@@ -21,6 +15,19 @@ function tone_freq(nr) {
   nr += 48;
   return Math.round(Math.pow(2, (nr-49)/12)*440);
 }
+
+
+var app = require('express')();
+var server = require('http').Server(app);
+var socket = require('socket.io')(server);
+
+app.listen(process.env.PORT || 8000);
+
+app.get('/', function (req, res) {
+  res.sendfile(__dirname + '/index.html');
+});
+
+var stream = T.stream('statuses/sample');
 
 stream.on('tweet', function (tweet) {
   var fc = tweet.user.followers_count;
