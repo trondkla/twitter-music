@@ -75,7 +75,7 @@
 
 		//var wsUri = "ws://localhost:8000/";
 		var wsUri = location.origin;
-		var socket = io(wsUri);
+		var socket = io.connect(wsUri);
 
 		socket.on('connect', function () {
 			console.log("connection");

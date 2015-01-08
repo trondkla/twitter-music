@@ -21,7 +21,7 @@ var app = require('express')();
 var server = require('http').Server(app);
 var socket = require('socket.io')(server);
 
-app.listen(process.env.PORT || 8000);
+server.listen(process.env.PORT || 8000);
 
 app.get('/', function (req, res) {
   res.sendfile(__dirname + '/index.html');
