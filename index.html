@@ -53,7 +53,8 @@
 		}
 		;
 		volume = 0.5;
-		var audio = new Audio(); // Create the HTML5 audio element
+		var activeAudio = 0;
+		var audio = [new Audio(), new Audio(), new Audio()]; // Create the HTML5 audio element
 		var play = function (freq) {
 			var wave = new RIFFWAVE();
 			var data = [];
@@ -68,9 +69,14 @@
 			}
 
 			wave.Make(data);
-			audio.src = wave.dataURI;
-			audio.volume = volume;
-			audio.play();
+			audio[activeAudio].src = wave.dataURI;
+			audio[activeAudio].volume = volume;
+			audio[activeAudio].play();
+			if(activeAudio == audio.length - 1){
+				activeAudio = 0;
+			} else {
+				activeAudio = activeAudio + 1;
+			}
 		};
 
 		var wsUri = location.origin;
