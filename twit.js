@@ -1,10 +1,10 @@
 var Twit = require('twit');
 var _ = require('underscore');
-var socket = require('socket.io')(process.env.WEBSOCKET_PORT || 8000);
+var socket = require('socket.io')(process.env.PORT || 8000);
 
 var connect = require('connect');
 var serveStatic = require('serve-static');
-connect().use(serveStatic(__dirname + "/public")).listen(process.env.HTTP_PORT || 8080);
+connect().use(serveStatic(__dirname + "/public")).listen(process.env.PORT || 8080);
 
 var T = new Twit({
   consumer_key: '7rMLsE4faev5mrvfJ5hYreu8w',
