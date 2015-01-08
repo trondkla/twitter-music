@@ -27,6 +27,10 @@ app.get('/', function (req, res) {
   res.sendfile(__dirname + '/index.html');
 });
 
+app.get('/fade.js', function (req, res) {
+  res.sendfile(__dirname + '/fade.js');
+});
+
 var stream = T.stream('statuses/sample');
 
 stream.on('tweet', function (tweet) {
