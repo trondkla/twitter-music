@@ -32,11 +32,10 @@ function compare(a,b) {
   return 0;
 }
 
-function updateWordCloud(text) {
-  var words = text.split(" ");
+function updateWordCloud(hashtags) {
 
-  for(var i = 0; i<words.length; i++) {
-    var word = words[i];
+  for(var i = 0; i<hashtags.length; i++) {
+    var word = "#" + hashtags[i].text;
 
     if ( _.isUndefined(cloud_words[word])) {
       cloud_words[word] = 1;
@@ -62,7 +61,7 @@ function updateWordCloud(text) {
   }
 
   for (var k = 0; k < wordCloud.length; k++) {
-    wordCloud[k].size = (200.0 / maxSize) * wordCloud[k].size;
+    wordCloud[k].size = (100.0 / maxSize) * wordCloud[k].size;
   }
 
   //console.log(wordCloud);
@@ -97,7 +96,7 @@ stream.on('tweet', function (tweet) {
 
   //console.log("FC: "+fc, "Max: "+max, "Min: "+min, toneFreq + "HZ");
 
-  updateWordCloud(tweet.text);
+  updateWordCloud(tweet.entities.hashtags);
 
   socket.emit('tweet', {
     text: tweet.text,
