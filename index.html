@@ -73,7 +73,8 @@
 			fadeOut(audio, 250, 0, 1);
 		}
 
-		var wsUri = "ws://localhost:8000/";
+		//var wsUri = "ws://localhost:8000/";
+		var wsUri = location.origin.replace(/^http/, 'ws');
 		var socket = io(wsUri);
 
 		socket.on('connect', function () {
