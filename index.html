@@ -26,8 +26,8 @@
 		};
 		volume = 0.5;
 		var activeAudio = 0;
-		var audio = [new Audio(), new Audio(), new Audio()]; // Create the HTML5 audio element
-		var play = function (freq) {
+		var audio = [new Audio(), new Audio(), new Audio(), new Audio(), new Audio(),new Audio(), new Audio(), new Audio(), new Audio(), new Audio(),new Audio(), new Audio(), new Audio(), new Audio(), new Audio()]; // Create the HTML5 audio element
+		var play = function (freq, lengde) {
 			var wave = new RIFFWAVE();
 			var data = [];
 
@@ -35,7 +35,8 @@
 			wave.header.numChannels = 1;
 
 			var i = 0;
-			while (i < 100000) {
+			lengde = lengde*100;
+			while (i < lengde) {
 				var t = i / wave.header.sampleRate;
 				data[i++] = 128 + Math.round(127 * Math.sin(freq * t * 2 * Math.PI));
 			}
@@ -66,7 +67,7 @@
 			console.error("error");
 		});
 		socket.on('tweet', function (t) {
-			play(t.tone);
+			play(t.tone, t.text.length);
 			words = t.words;
 			throttledWordCloudUpdate();
 		});

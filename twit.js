@@ -5,7 +5,7 @@ var app = require('express')();
 var server = require('http').Server(app);
 var socket = require('socket.io')(server);
 
-server.listen(process.env.PORT || 8000);
+server.listen(process.env.PORT || 8080);
 
 var T = new Twit({
   consumer_key: process.env.consumer_key,
