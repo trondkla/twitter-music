@@ -6,30 +6,25 @@
 	<title>Twitter music</title>
 	<script src="http://www.codebase.es/riffwave/riffwave.js"></script>
 	<script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
-	<script src="http://timdream.org/wordcloud2.js/src/wordcloud2.js"></script>
 	<script src="http://code.jquery.com/jquery-2.1.3.min.js"></script>
+	<script src="http://www.goat1000.com/jquery.tagcanvas.js?2.5.1" type="text/javascript"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.7.0/underscore-min.js"></script>
 	<script src="fade.js"></script>
 	<script language="javascript" type="text/javascript">
+		colors = ["green", "red", "blue"];
 		function buildTagCloud(words) {
-			maxSize = _.max(words.map(function(i){return i.size}));
-			cloud = WordCloud("cloud", {
-				list: words.map(function(i){
-					return [i.text, (100/maxSize)* i.size, i.size]
-				}),
-				gridSize: 18,
-				click: function(item) {
-					window.open("https://twitter.com/search?q="+item[0].replace("#", "%23"), '_blank');
-				},
-				clearCanvas: true,
-				shape: "star"
+			tags = $("#tags");
+			tags.html("<ul></ul>");
+			maxSize = _.max(words.map(function(i){return i.size}))
+			words.forEach(function(item){
+				tags.select("<ul>").append('<li><a style="color: '+ colors[Math.floor(Math.random()*3)] +'; font-size: '+ (50/item.size)*maxSize +'px;" href="https://twitter.com/search?q='+item.text.replace("#", "%23")+'" target="_blank">'+ item.text + '</a></li>');
 			});
-			cloud
+			TagCanvas.Update('cloud','tags');
 		};
 		volume = 0.5;
 		var activeAudio = 0;
-		var audio = [new Audio()]; // Create the HTML5 audio element
-		var play = function (freq, lengde) {
+		var audio = [new Audio(), new Audio(), new Audio()]; // Create the HTML5 audio element
+		var play = function (freq) {
 			var wave = new RIFFWAVE();
 			var data = [];
 
@@ -37,11 +32,9 @@
 			wave.header.numChannels = 1;
 
 			var i = 0;
-			lengde = lengde*110;
-			while (i < lengde) {
+			while (i < 100000) {
 				var t = i / wave.header.sampleRate;
-				data[i++] = 128 + Math.round(127 * Math.sin(freq * t * 2 * Math.PI));// left speaker
-				data[i++] = 128 + Math.round(127 * Math.sin(freq * t * 2 * Math.PI));// right speaker
+				data[i++] = 128 + Math.round(127 * Math.sin(freq * t * 2 * Math.PI));
 			}
 
 			wave.Make(data);
@@ -70,7 +63,7 @@
 			console.error("error");
 		});
 		socket.on('tweet', function (t) {
-			play(t.tone, t.text.length);
+			play(t.tone);
 			words = t.words;
 			throttledWordCloudUpdate();
 		});
@@ -79,5 +72,8 @@
 
 <body>
 <canvas width=1000 height=1000 id="cloud"></canvas>
+<div id="tags" style="display:none">
+</div>
+<script>TagCanvas.Start('cloud','tags', {dragControl: true, weight: true, textFont: null, textColour: null});</script>
 </body>
 </html>
