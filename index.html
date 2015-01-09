@@ -13,8 +13,6 @@
 	<script language="javascript" type="text/javascript">
 		function buildTagCloud(words) {
 			maxSize = _.max(words.map(function(i){return i.size}));
-			canvas = $("#cloud").get(0);
-			canvas.getContext("2d").clearRect(0,0,canvas.width,canvas.height);
 			WordCloud("cloud", {
 				list: words.map(function(i){
 					return [i.text, (100/maxSize)* i.size, i.size]
@@ -22,7 +20,8 @@
 				gridSize: 18,
 				click: function(item) {
 					alert(item[0] + ': ' + item[2]);
-				}
+				},
+				clearCanvas: true
 			});
 		};
 		volume = 0.5;
