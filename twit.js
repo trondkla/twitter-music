@@ -8,10 +8,10 @@ var socket = require('socket.io')(server);
 server.listen(process.env.PORT || 8000);
 
 var T = new Twit({
-  consumer_key: '7rMLsE4faev5mrvfJ5hYreu8w',
-  consumer_secret: 'b6Qc4ED2MK03rOJxZlWMSf9VuU30KK3dLZncx5WIVrvNO7jvmT',
-  access_token: '15518912-F2txQ4JnpwWhbVdsLSw6ZALPBbWvpIBdIv1RdnwzW',
-  access_token_secret: 'D7NHtpsoSYwr0VwKhkSAC80podGOFofrXR1k3IzG0CoDm'
+  consumer_key: process.env.consumer_key,
+  consumer_secret: process.env.consumer_secret,
+  access_token: process.env.access_token,
+  access_token_secret: process.env.access_token_secret
 });
 
 var cloud_words = {};
