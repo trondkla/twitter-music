@@ -26,7 +26,7 @@
 		};
 		volume = 0.5;
 		var activeAudio = 0;
-		var audio = [new Audio(), new Audio(), new Audio(), new Audio(), new Audio(),new Audio(), new Audio(), new Audio(), new Audio(), new Audio(),new Audio(), new Audio(), new Audio(), new Audio(), new Audio()]; // Create the HTML5 audio element
+		var audio = [new Audio()]; // Create the HTML5 audio element
 		var play = function (freq, lengde) {
 			var wave = new RIFFWAVE();
 			var data = [];
@@ -35,10 +35,11 @@
 			wave.header.numChannels = 1;
 
 			var i = 0;
-			lengde = lengde*100;
+			lengde = lengde*110;
 			while (i < lengde) {
 				var t = i / wave.header.sampleRate;
-				data[i++] = 128 + Math.round(127 * Math.sin(freq * t * 2 * Math.PI));
+				data[i++] = 128 + Math.round(127 * Math.sin(freq * t * 2 * Math.PI));// left speaker
+				data[i++] = 128 + Math.round(127 * Math.sin(freq * t * 2 * Math.PI));// right speaker
 			}
 
 			wave.Make(data);
