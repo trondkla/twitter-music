@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 
-	<title>WebSocket Test</title>
+	<title>Twitter music</title>
 	<script src="http://www.codebase.es/riffwave/riffwave.js"></script>
 	<script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
 	<script src="http://timdream.org/wordcloud2.js/src/wordcloud2.js"></script>
@@ -28,8 +28,8 @@
 		};
 		volume = 0.5;
 		var activeAudio = 0;
-		var audio = [new Audio(), new Audio(), new Audio()]; // Create the HTML5 audio element
-		var play = function (freq) {
+		var audio = [new Audio()]; // Create the HTML5 audio element
+		var play = function (freq, lengde) {
 			var wave = new RIFFWAVE();
 			var data = [];
 
@@ -37,9 +37,11 @@
 			wave.header.numChannels = 1;
 
 			var i = 0;
-			while (i < 100000) {
+			lengde = lengde*110;
+			while (i < lengde) {
 				var t = i / wave.header.sampleRate;
-				data[i++] = 128 + Math.round(127 * Math.sin(freq * t * 2 * Math.PI));
+				data[i++] = 128 + Math.round(127 * Math.sin(freq * t * 2 * Math.PI));// left speaker
+				data[i++] = 128 + Math.round(127 * Math.sin(freq * t * 2 * Math.PI));// right speaker
 			}
 
 			wave.Make(data);
@@ -68,7 +70,7 @@
 			console.error("error");
 		});
 		socket.on('tweet', function (t) {
-			play(t.tone);
+			play(t.tone, t.text.length);
 			words = t.words;
 			throttledWordCloudUpdate();
 		});
@@ -76,7 +78,6 @@
 </head>
 
 <body>
-<h2>Twitter music</h2>
 <canvas width=1000 height=1000 id="cloud"></canvas>
 </body>
 </html>
