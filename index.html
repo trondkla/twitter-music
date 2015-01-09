@@ -6,52 +6,19 @@
 	<title>WebSocket Test</title>
 	<script src="http://www.codebase.es/riffwave/riffwave.js"></script>
 	<script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
-	<script src="http://www.jasondavies.com/d3.min.js"></script>
-	<script src="http://www.jasondavies.com/wordcloud/d3.layout.cloud.js"></script>
+	<script src="http://timdream.org/wordcloud2.js/src/wordcloud2.js"></script>
 	<script src="http://code.jquery.com/jquery-2.1.3.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.7.0/underscore-min.js"></script>
 	<script src="fade.js"></script>
 	<script language="javascript" type="text/javascript">
 		function buildTagCloud(words) {
-			var fill = d3.scale.category20();
-			d3.layout.cloud().size([$(document).height()*0.9, $(document).width()*0.9])
-					.words(words)
-					.padding(5)
-					.rotate(function () {
-						return ~~(Math.random() * 2) * 90;
-					})
-					.font("Impact")
-					.fontSize(function (d) {
-						return d.size;
-					})
-					.on("end", draw)
-					.start();
-			function draw(words) {
-				d3.select("svg").html("")
-						.attr("width", $(document).width()*0.9)
-						.attr("height", $(document).height()*0.9)
-						.append("g")
-						.attr("transform", "translate("+($(document).width()*0.45)+","+($(document).height()*0.45)+")")
-						.selectAll("text")
-						.data(words)
-						.enter().append("text")
-						.style("font-size", function (d) {
-							return d.size + "px";
-						})
-						.style("font-family", "Impact")
-						.style("fill", function (d, i) {
-							return fill(i);
-						})
-						.attr("text-anchor", "middle")
-						.attr("transform", function (d) {
-							return "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")";
-						})
-						.text(function (d) {
-							return d.text;
-						});
-			}
-		}
-		;
+			WordCloud("cloud", {
+				list: words.map(function(i){
+					return [i.text, i.size]
+				}),
+				gridSize: 18
+			});
+		};
 		volume = 0.5;
 		var activeAudio = 0;
 		var audio = [new Audio(), new Audio(), new Audio()]; // Create the HTML5 audio element
@@ -85,7 +52,7 @@
 
 		var throttledWordCloudUpdate = _.throttle(function() {
 			buildTagCloud(words);
-		}, 1500);
+		}, 5000);
 
 		socket.on('connect', function () {
 			console.log("connection");
@@ -103,6 +70,6 @@
 
 <body>
 <h2>Twitter music</h2>
-<svg />
+<canvas width=1000 height=700 id="cloud"></canvas>
 </body>
 </html>
