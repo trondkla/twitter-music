@@ -55,15 +55,6 @@ function updateWordCloud(hashtags) {
   wordCloud = wordCloud.sort(compare);
   wordCloud = wordCloud.slice(0, 50);
 
-  var maxSize = 0;
-  for (var j = 0; j < wordCloud.length; j++) {
-    maxSize = _.max([wordCloud[j].size, maxSize]);
-  }
-
-  for (var k = 0; k < wordCloud.length; k++) {
-    wordCloud[k].size = (100.0 / maxSize) * wordCloud[k].size;
-  }
-
   //console.log(wordCloud);
 }
 
