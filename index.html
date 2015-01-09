@@ -8,13 +8,14 @@
 	<script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
 	<script src="http://timdream.org/wordcloud2.js/src/wordcloud2.js"></script>
 	<script src="http://code.jquery.com/jquery-2.1.3.min.js"></script>
+	<script src="audiosynth.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.7.0/underscore-min.js"></script>
 	<script src="fade.js"></script>
 	<script language="javascript" type="text/javascript">
 		function buildTagCloud(words) {
 			maxSize = _.max(words.map(function(i){return i.size}));
 			cloud = WordCloud("cloud", {
-				list: words.map(function(i){
+				list: words.slice(0, 20).map(function(i){
 					return [i.text, (100/maxSize)* i.size, i.size]
 				}),
 				gridSize: 18,
@@ -26,9 +27,10 @@
 			});
 			cloud
 		};
+		/*
 		volume = 0.5;
 		var activeAudio = 0;
-		var audio = [new Audio()]; // Create the HTML5 audio element
+		var audio = [new Audio(), new Audio(), new Audio(),new Audio()]; // Create the HTML5 audio element
 		var play = function (freq, lengde) {
 			var wave = new RIFFWAVE();
 			var data = [];
@@ -37,11 +39,12 @@
 			wave.header.numChannels = 1;
 
 			var i = 0;
-			lengde = lengde*110;
+			lengde = lengde*90;
 			while (i < lengde) {
 				var t = i / wave.header.sampleRate;
-				data[i++] = 128 + Math.round(127 * Math.sin(freq * t * 2 * Math.PI));// left speaker
-				data[i++] = 128 + Math.round(127 * Math.sin(freq * t * 2 * Math.PI));// right speaker
+				data[i] = 128 + Math.round(127 * Math.sin(freq * t * 2 * Math.PI));
+				data[i] *= Math.exp(-t*4);
+				i++;
 			}
 
 			wave.Make(data);
@@ -52,6 +55,16 @@
 				activeAudio = 0;
 			} else {
 				activeAudio = activeAudio + 1;
+			}
+		};
+		*/
+			
+		var piano = Synth.createInstrument('piano');
+
+		var play = function (note, oktav, lengde) {
+			if (note != -1) {
+				console.log("Playing " + note + oktav);
+				piano.play(note, oktav, lengde/100.0); // plays C4 for 2s using the 'piano' sound profile
 			}
 		};
 
@@ -70,7 +83,7 @@
 			console.error("error");
 		});
 		socket.on('tweet', function (t) {
-			play(t.tone, t.text.length);
+			play(t.tone, t.oktav, t.text.length);
 			words = t.words;
 			throttledWordCloudUpdate();
 		});

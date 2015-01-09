@@ -53,7 +53,7 @@ function updateWordCloud(hashtags) {
   }
 
   wordCloud = wordCloud.sort(compare);
-  wordCloud = wordCloud.slice(0, 50);
+  wordCloud = wordCloud.slice(0, 120);
 
   //console.log(wordCloud);
 }
@@ -66,13 +66,17 @@ app.get('/fade.js', function (req, res) {
   res.sendFile(__dirname + '/fade.js');
 });
 
+app.get('/audiosynth.js', function (req, res) {
+  res.sendFile(__dirname + '/audiosynth.js');
+});
+
 var stream = T.stream('statuses/sample');
 
 stream.on('tweet', function (tweet) {
   var fc = tweet.user.followers_count;
   lastCounts.push(fc);
 
-  if(lastCounts.length < 10) {return;}
+  if(lastCounts.length < 50) {return;}
 
 
   var max = _.max(lastCounts);
@@ -84,6 +88,63 @@ stream.on('tweet', function (tweet) {
 
   var toneNumber = Math.round(fc/divider);
   var toneFreq = tone_freq(toneNumber);
+  var toneNote = toneNumber % 12;
+  var oktav = 3 + Math.round(toneNumber / 12);
+
+/*
+
+  //var index = _.indexOf(wordCloud, foundHashtag);
+
+  var toneNote = -1;
+  var oktav = -1;
+
+  for(var index = 0; index < wordCloud.length; index++){
+    if(_.contains(tweet.entities.hashtags.map(function(hashtag){return "#"+hashtag.text;}), wordCloud[index].text)){
+      toneNote = Math.round(index % 12);
+      oktav = 3 + Math.round((index / 120));
+      break;
+    }
+  }
+  */
+
+  switch(toneNote) {
+    case 0:
+      toneNote = "C";
+      break;
+    case 1:
+      toneNote = "C#";
+      break;
+    case 2:
+      toneNote = "D";
+      break;
+    case 3:
+      toneNote = "D#";
+      break;
+    case 4:
+      toneNote = "E";
+      break;
+    case 5:
+      toneNote = "F";
+      break;
+    case 6:
+      toneNote = "F#";
+      break;
+    case 7:
+      toneNote = "G";
+      break;
+    case 8:
+      toneNote = "G#";
+      break;
+    case 9:
+      toneNote = "A";
+      break;
+    case 10:
+      toneNote = "A#";
+      break;
+    case 11:
+      toneNote = "B";
+      break;
+  }
 
   //console.log("FC: "+fc, "Max: "+max, "Min: "+min, toneFreq + "HZ");
 
@@ -93,7 +154,9 @@ stream.on('tweet', function (tweet) {
     text: tweet.text,
     lang: tweet.lang,
     influencei: tweet.user.followers_count,
-    tone: toneFreq,
+    toneFreq: toneFreq,
+    tone: toneNote,
+    oktav: oktav,
     words: wordCloud
   });
   lastCounts.pop();
