@@ -63,7 +63,7 @@
 
 		var play = function (note, oktav, lengde) {
 			if (note != -1) {
-				console.log("Playing " + note + oktav);
+				//console.log("Playing " + note + oktav);
 				piano.play(note, oktav, lengde/100.0); // plays C4 for 2s using the 'piano' sound profile
 			}
 		};
@@ -87,10 +87,21 @@
 			words = t.words;
 			throttledWordCloudUpdate();
 		});
+
+		$(function(){
+			var width = $(document).width();
+			var height = $(document).height();
+
+			var minst = _.min(width, height)*0.8;
+
+			$("canvas")
+				.width(minst)
+				.height(minst);
+		});
 	</script>
 </head>
 
 <body>
-<canvas width=1000 height=1000 id="cloud"></canvas>
+<canvas width=1000 height=1000 id="cloud" style="text-align: center;"></canvas>
 </body>
 </html>

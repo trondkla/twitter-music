@@ -73,6 +73,7 @@ app.get('/audiosynth.js', function (req, res) {
 var stream = T.stream('statuses/sample');
 
 stream.on('tweet', function (tweet) {
+
   var fc = tweet.user.followers_count;
   lastCounts.push(fc);
 
